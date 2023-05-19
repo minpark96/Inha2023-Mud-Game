@@ -166,12 +166,12 @@ void Keep()
 		PrintTable();
 		if (GetAsyncKeyState(VK_LEFT))
 			if (POS == 1) POS = cntRolledDice;
-			else if (POS == 6) POS = cntKeepedDice + 6;
+			else if (POS == 6) POS = cntKeepedDice + 5;
 			else if (POS == 0);
 			else POS -= 1;
 		else if (GetAsyncKeyState(VK_RIGHT))
 			if (POS == cntRolledDice) POS = 1;
-			else if (POS == cntKeepedDice + 6) POS = 6;
+			else if (POS == cntKeepedDice + 5) POS = 6;
 			else if (POS == 0);
 			else POS += 1;
 		else if (GetAsyncKeyState(VK_UP))
@@ -301,20 +301,43 @@ void KeepToRoll(int idx)
 
 void PrintChooseButton(int POS)
 {
+	int POSKeep = -1;
+	int POSRoll = -1;
+
 	if (POS == 0)
 	{
 		SetColor(11);
-		gotoxy(33, 22);  printf("Back");
+		gotoxy(33, 22); printf("Back");
 		SetColor(15);
+	}
+	else if (POS > 5)
+	{
+		gotoxy(33, 22); printf("Back");
+		POSKeep = POS - 6;
+		for (int i = 0; i < POSKeep + 1; i++)
+		{
+			if (keepedDice[i] == 0)
+			{
+				POSKeep++;
+			}
+		}
 	}
 	else
 	{
-		gotoxy(33, 22);  printf("Back");
+		gotoxy(33, 22); printf("Back");		
+		POSRoll = POS - 1;
+		for (int i = 0; i < POSRoll + 1; i++)
+		{
+			if (rolledDice[i] == 0)
+			{
+				POSRoll++;
+			}
+		}
 	}
 
 	for (int i = 0; i < 5; i++)
 	{
-		if (keepedDice[i] != 0 && i == POS - 6)
+		if (keepedDice[i] != 0 && i == POSKeep)
 		{
 			SetColor(11);
 			gotoxy(GetX(i) + 6, 10); printf("¡ã");
@@ -326,7 +349,7 @@ void PrintChooseButton(int POS)
 		}
 		else;
 
-		if (rolledDice[i] != 0 && i == POS - 1)
+		if (rolledDice[i] != 0 && i == POSRoll)
 		{
 			SetColor(11);
 			gotoxy(GetX(i) + 6, 20); printf("¡ã");
@@ -642,7 +665,7 @@ void RollTheDice(int* rollCount)
 void PrintTable()
 {
 	gotoxy(0, 24); puts("¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á");
-	puts("¡á      ÅÏ      ¡á          ¡á          ¡á");
+	puts("¡á     Turn     ¡á          ¡á          ¡á");
 	printf("¡á    %2d/12     ¡á Player 1 ¡á Player 2 ¡á\n", turn);
 	printf("¡á Categories   ¡á          ¡á          ¡á\n");
 	puts("¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á");
