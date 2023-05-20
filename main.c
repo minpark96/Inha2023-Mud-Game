@@ -1,11 +1,10 @@
 #include "main.h"
 
-Score* aces, * deuces, * threes, * fours, * fives, * sixes, * bonus;
-Score* choice, * fourOfAKind, * fullHouse, * smallStraight, * largeStraight, * yacht;
+Point* point[NUMBER_OF_POINTS];
 int subTotalP1, subTotalP2, totalP1, totalP2;
-int rolledDice[5];
-int keepedDice[5];
-int finalDice[5];
+int rolledDice[NUMBER_OF_DICE];
+int keepedDice[NUMBER_OF_DICE];
+int finalDice[NUMBER_OF_DICE];
 int turn = 1;
 int player = 1;
 int rollCount = 0;
@@ -51,10 +50,10 @@ int main(void)
 	if (POS == 0)
 	{
 		// 구조체 변수 초기화
-		InitScore();
+		InitPoint();
 		//InitDice();
 		cls;
-		ShowTurnAndPlayer(turn, player);
+		ShowTurnAndPlayer();
 		Sleep(1000);
 		system("mode con: cols=70 lines=48");
 		while (1)
@@ -75,11 +74,13 @@ int main(void)
 				gotoxy(33, 22); printf("Roll\n");
 				SetColor(15);
 			}
-			else if (rollCount == 3)
+			else if (rollCount == MAX_ROLL_COUNT)
 			{
 				if (GetAsyncKeyState(VK_RETURN))
 				{
-					// 점수판 고르기인데 못돌아감
+					Sleep(50);
+					ChooseCategory();
+					// 점수판 고르기 (취소 불가능)
 				}
 				SetColor(11);
 				gotoxy(28, 22); printf("Choose Category\n");
@@ -97,6 +98,8 @@ int main(void)
 				{
 					if (POS == 0)
 					{
+						Sleep(50);
+						ChooseCategory();
 						// 점수판 고르기 (취소 가능)
 					}
 					else if (POS == 1)
@@ -146,14 +149,89 @@ int main(void)
 	return 0;
 }
 
+void ChooseCategory()
+{
+	int POS = 0;
+
+	KeepAndRollToFinal();
+	SetTable();;
+	ShowTempPoints();
+	
+	while (1)
+	{
+		cls;
+		gotoxy(0, 0); printf("Player%d\n", player);
+		gotoxy(58, 0); printf("Roll: %d left\n", MAX_ROLL_COUNT - rollCount);
+		PrintKeepedDice();
+		PrintRolledDice();
+		PrintTable();
+
+
+
+		Sleep(100);
+	}
+
+
+
+}
+
+void KeepAndRollToFinal()
+{
+	int idx = 0;
+
+	for (int i = 0; i < NUMBER_OF_DICE; i++)
+	{
+		if (keepedDice[i] != 0)
+		{
+			finalDice[idx] = keepedDice[i];
+			idx++;
+		}
+	}
+
+	for (int i = 0; i < NUMBER_OF_DICE; i++)
+	{
+		if (rolledDice[i] != 0)
+		{
+			finalDice[idx] = rolledDice[i];
+			idx++;
+		}
+	}
+
+	Sort();
+}
+
+void ShowTempPoints()
+{
+	if (player == 1)
+	{
+		for (int i = 0; i < NUMBER_OF_POINTS; i++)
+		{
+			if (point[i]->isUsedP1 == 0)
+			{
+				point[i]->isUsedP1++;
+			}
+		}
+	}
+	else
+	{
+		for (int i = 0; i < NUMBER_OF_POINTS; i++)
+		{
+			if (point[i]->isUsedP2 == 0)
+			{
+				point[i]->isUsedP2++;
+			}
+		}
+	}
+}
+
 void Keep()
 {
 	
 	int POS = 0;
 	int cntKeepedDice = 0;
 	int cntRolledDice = 0;
-	int idxKeepedDice[5] = { 0 };
-	int idxRolledDice[5] = { 0 };
+	int idxKeepedDice[NUMBER_OF_DICE] = { 0 };
+	int idxRolledDice[NUMBER_OF_DICE] = { 0 };
 
 	while (1)
 	{
@@ -166,36 +244,36 @@ void Keep()
 		PrintTable();
 		if (GetAsyncKeyState(VK_LEFT))
 			if (POS == 1) POS = cntRolledDice;
-			else if (POS == 6) POS = cntKeepedDice + 5;
+			else if (POS == NUMBER_OF_DICE + 1) POS = cntKeepedDice + NUMBER_OF_DICE;
 			else if (POS == 0);
 			else POS -= 1;
 		else if (GetAsyncKeyState(VK_RIGHT))
 			if (POS == cntRolledDice) POS = 1;
-			else if (POS == cntKeepedDice + 5) POS = 6;
+			else if (POS == cntKeepedDice + NUMBER_OF_DICE) POS = NUMBER_OF_DICE + 1;
 			else if (POS == 0);
 			else POS += 1;
 		else if (GetAsyncKeyState(VK_UP))
 			if (POS == 0 && cntRolledDice != 0) POS = 1;
-			else if (POS == 0 && cntRolledDice == 0) POS = 6;
-			else if (POS < 6 && cntKeepedDice != 0) POS = 6;
+			else if (POS == 0 && cntRolledDice == 0) POS = NUMBER_OF_DICE + 1;
+			else if (POS < NUMBER_OF_DICE + 1 && cntKeepedDice != 0) POS = NUMBER_OF_DICE + 1;
 			else;
 		else if (GetAsyncKeyState(VK_DOWN))
-			if (POS > 5 && cntRolledDice != 0) POS = 1;
-			else if (POS > 5 && cntRolledDice == 0) POS = 0;
-			else if (POS > 0 && POS < 6) POS = 0;
+			if (POS > NUMBER_OF_DICE && cntRolledDice != 0) POS = 1;
+			else if (POS > NUMBER_OF_DICE && cntRolledDice == 0) POS = 0;
+			else if (POS > 0 && POS < NUMBER_OF_DICE + 1) POS = 0;
 			else;
 		else if (GetAsyncKeyState(VK_RETURN))
 		{
-			if (POS > 0 && POS < 6)
+			if (POS > 0 && POS < NUMBER_OF_DICE + 1)
 			{
 				Sleep(50);
 				RollToKeep(idxRolledDice[POS - 1]);
 				POS = 0;
 			}
-			else if (POS > 5)
+			else if (POS > NUMBER_OF_DICE)
 			{
 				Sleep(50);
-				KeepToRoll(idxKeepedDice[POS - 6]);
+				KeepToRoll(idxKeepedDice[POS - (NUMBER_OF_DICE + 1)]);
 				POS = 0;
 			}
 			else
@@ -251,7 +329,7 @@ void CountKeepAndRoll(int* cntKeep, int* cntRoll, int** idxKeep, int** idxRoll)
 	*cntKeep = 0;
 	*cntRoll = 0;
 
-	for (int i = 0; i < 5; i++)
+	for (int i = 0; i < NUMBER_OF_DICE; i++)
 	{
 		if (keepedDice[i])
 		{
@@ -277,7 +355,7 @@ void CountKeepAndRoll(int* cntKeep, int* cntRoll, int** idxKeep, int** idxRoll)
 
 void RollToKeep(int idx)
 {
-	for (int i = 0; i < 5; i++)
+	for (int i = 0; i < NUMBER_OF_DICE; i++)
 	{
 		if (keepedDice[i] == 0)
 		{
@@ -289,7 +367,7 @@ void RollToKeep(int idx)
 
 void KeepToRoll(int idx)
 {
-	for (int i = 0; i < 5; i++)
+	for (int i = 0; i < NUMBER_OF_DICE; i++)
 	{
 		if (rolledDice[i] == 0)
 		{
@@ -310,10 +388,10 @@ void PrintChooseButton(int POS)
 		gotoxy(33, 22); printf("Back");
 		SetColor(15);
 	}
-	else if (POS > 5)
+	else if (POS > NUMBER_OF_DICE)
 	{
 		gotoxy(33, 22); printf("Back");
-		POSKeep = POS - 6;
+		POSKeep = POS - (NUMBER_OF_DICE + 1);
 		for (int i = 0; i < POSKeep + 1; i++)
 		{
 			if (keepedDice[i] == 0)
@@ -335,29 +413,29 @@ void PrintChooseButton(int POS)
 		}
 	}
 
-	for (int i = 0; i < 5; i++)
+	for (int i = 0; i < NUMBER_OF_DICE; i++)
 	{
 		if (keepedDice[i] != 0 && i == POSKeep)
 		{
 			SetColor(11);
-			gotoxy(GetX(i) + 6, 10); printf("▲");
+			gotoxy(GetX(i) + NUMBER_OF_DICE + 1, 10); printf("▲");
 			SetColor(15);
 		}
 		else if (keepedDice[i] != 0)
 		{
-			gotoxy(GetX(i) + 6, 10); printf("▲");
+			gotoxy(GetX(i) + NUMBER_OF_DICE + 1, 10); printf("▲");
 		}
 		else;
 
 		if (rolledDice[i] != 0 && i == POSRoll)
 		{
 			SetColor(11);
-			gotoxy(GetX(i) + 6, 20); printf("▲");
+			gotoxy(GetX(i) + NUMBER_OF_DICE + 1, 20); printf("▲");
 			SetColor(15);
 		}
 		else if (rolledDice[i] != 0)
 		{
-			gotoxy(GetX(i) + 6, 20); printf("▲");
+			gotoxy(GetX(i) + NUMBER_OF_DICE + 1, 20); printf("▲");
 		}
 		else;
 	}
@@ -370,7 +448,7 @@ void PrintKeepedDice(void)
 	int x;
 	int y = 3;
 
-	for (int i = 0; i < 5; i++)
+	for (int i = 0; i < NUMBER_OF_DICE; i++)
 	{
 		x = GetX(i);
 
@@ -408,7 +486,7 @@ void PrintRolledDice(void)
 	int x;
 	int y = 13;
 
-	for (int i = 0; i < 5; i++)
+	for (int i = 0; i < NUMBER_OF_DICE; i++)
 	{
 		x = GetX(i);
 
@@ -550,7 +628,7 @@ void PrintMenu(void)
 	return;
 }
 
-void ShowTurnAndPlayer(int turn, int player)
+void ShowTurnAndPlayer()
 {
 	// 턴 보여주기
 	system("mode con: cols=106 lines=9");
@@ -569,75 +647,21 @@ void ShowTurnAndPlayer(int turn, int player)
 }
 
 // 점수 초기화
-void InitScore()
+void InitPoint()
 {
-	aces = (Score*)malloc(sizeof(Score));
-	deuces = (Score*)malloc(sizeof(Score));
-	threes = (Score*)malloc(sizeof(Score));
-	fours = (Score*)malloc(sizeof(Score));
-	fives = (Score*)malloc(sizeof(Score));
-	sixes = (Score*)malloc(sizeof(Score));
-	bonus = (Score*)malloc(sizeof(Score));
-	choice = (Score*)malloc(sizeof(Score));
-	fourOfAKind = (Score*)malloc(sizeof(Score));
-	fullHouse = (Score*)malloc(sizeof(Score));
-	smallStraight = (Score*)malloc(sizeof(Score));
-	largeStraight = (Score*)malloc(sizeof(Score));
-	yacht = (Score*)malloc(sizeof(Score));
+	for (int i = 0; i < NUMBER_OF_POINTS; i++)
+	{
+		point[i] = (Point*)malloc(sizeof(Point));
+	}
 
-	aces->scoreP1 = 0;
-	aces->scoreP2 = 0;
-	deuces->scoreP1 = 0;
-	deuces->scoreP2 = 0;
-	threes->scoreP1 = 0;
-	threes->scoreP2 = 0;
-	fours->scoreP1 = 0;
-	fours->scoreP2 = 0;
-	fives->scoreP1 = 0;
-	fives->scoreP2 = 0;
-	sixes->scoreP1 = 0;
-	sixes->scoreP2 = 0;
-	bonus->scoreP1 = 0;
-	bonus->scoreP2 = 0;
-	choice->scoreP1 = 0;
-	choice->scoreP2 = 0;
-	fourOfAKind->scoreP1 = 0;
-	fourOfAKind->scoreP2 = 0;
-	fullHouse->scoreP1 = 0;
-	fullHouse->scoreP2 = 0;
-	smallStraight->scoreP1 = 0;
-	smallStraight->scoreP2 = 0;
-	largeStraight->scoreP1 = 0;
-	largeStraight->scoreP2 = 0;
-	yacht->scoreP1 = 0;
-	yacht->scoreP2 = 0;
-
-	aces->isUsedP1 = 0;
-	aces->isUsedP2 = 0;
-	deuces->isUsedP1 = 0;
-	deuces->isUsedP2 = 0;
-	threes->isUsedP1 = 0;
-	threes->isUsedP2 = 0;
-	fours->isUsedP1 = 0;
-	fours->isUsedP2 = 0;
-	fives->isUsedP1 = 0;
-	fives->isUsedP2 = 0;
-	sixes->isUsedP1 = 0;
-	sixes->isUsedP2 = 0;
-	bonus->isUsedP1 = 0;
-	bonus->isUsedP2 = 0;
-	choice->isUsedP1 = 0;
-	choice->isUsedP2 = 0;
-	fourOfAKind->isUsedP1 = 0;
-	fourOfAKind->isUsedP2 = 0;
-	fullHouse->isUsedP1 = 0;
-	fullHouse->isUsedP2 = 0;
-	smallStraight->isUsedP1 = 0;
-	smallStraight->isUsedP2 = 0;
-	largeStraight->isUsedP1 = 0;
-	largeStraight->isUsedP2 = 0;
-	yacht->isUsedP1 = 0;
-	yacht->isUsedP2 = 0;
+	for (int i = 0; i < NUMBER_OF_POINTS; i++)
+	{
+		
+		point[i]->pointP1 = 0;
+		point[i]->pointP2 = 0;
+		point[i]->isUsedP1 = 0;
+		point[i]->isUsedP2 = 0;
+	}
 }
 
 // 주사위 굴리기
@@ -645,7 +669,7 @@ void RollTheDice(int* rollCount)
 {
 	if (*rollCount == 0)
 	{
-		for (int idx = 0; idx < 5; idx++)
+		for (int idx = 0; idx < NUMBER_OF_DICE; idx++)
 		{
 			rolledDice[idx] = rand() % 6 + 1;
 		}
@@ -653,7 +677,7 @@ void RollTheDice(int* rollCount)
 	}
 	else
 	{
-		for (int idx = 0; idx < 5; idx++)
+		for (int idx = 0; idx < NUMBER_OF_DICE; idx++)
 		{
 			if (rolledDice[idx] != 0)
 				rolledDice[idx] = rand() % 6 + 1;
@@ -670,57 +694,57 @@ void PrintTable()
 	printf("■ Categories   ■          ■          ■\n");
 	puts("■■■■■■■■■■■■■■■■■■■■■");
 
-	if (aces->isUsedP1 && aces->isUsedP2)
-		printf("■ Aces         ■     %d    ■     %d    ■\n", aces->scoreP1, aces->scoreP2);
-	else if(aces->isUsedP1)
-		printf("■ Aces         ■     %d    ■          ■\n", aces->scoreP1);
-	else if(aces->isUsedP2)
-		printf("■ Aces         ■          ■     %d    ■\n", aces->scoreP2);
+	if (point[ACES]->isUsedP1 && point[ACES]->isUsedP2)
+		printf("■ Aces         ■     %d    ■     %d    ■\n", point[ACES]->pointP1, point[ACES]->pointP2);
+	else if(point[ACES]->isUsedP1)
+		printf("■ Aces         ■     %d    ■          ■\n", point[ACES]->pointP1);
+	else if(point[ACES]->isUsedP2)
+		printf("■ Aces         ■          ■     %d    ■\n", point[ACES]->pointP2);
 	else
 		printf("■ Aces         ■          ■          ■\n");
 
-	if (deuces->isUsedP1 && deuces->isUsedP2)
-		printf("■ Deuces       ■    %2d    ■    %2d    ■\n", deuces->scoreP1, deuces->scoreP2);
-	else if (deuces->isUsedP1)
-		printf("■ Deuces       ■    %2d    ■          ■\n", deuces->scoreP1);
-	else if (deuces->isUsedP2)
-		printf("■ Deuces       ■          ■    %2d    ■\n", deuces->scoreP2);
+	if (point[DEUCES]->isUsedP1 && point[DEUCES]->isUsedP2)
+		printf("■ Deuces       ■    %2d    ■    %2d    ■\n", point[DEUCES]->pointP1, point[DEUCES]->pointP2);
+	else if (point[DEUCES]->isUsedP1)
+		printf("■ Deuces       ■    %2d    ■          ■\n", point[DEUCES]->pointP1);
+	else if (point[DEUCES]->isUsedP2)
+		printf("■ Deuces       ■          ■    %2d    ■\n", point[DEUCES]->pointP2);
 	else
 		printf("■ Deuces       ■          ■          ■\n");
 	
-	if (threes->isUsedP1 && threes->isUsedP2)
-		printf("■ Threes       ■    %2d    ■    %2d    ■\n", threes->scoreP1, threes->scoreP2);
-	else if (threes->isUsedP1)
-		printf("■ Threes       ■    %2d    ■          ■\n", threes->scoreP1);
-	else if (threes->isUsedP2)
-		printf("■ Threes       ■          ■    %2d    ■\n", threes->scoreP2);
+	if (point[THREES]->isUsedP1 && point[THREES]->isUsedP2)
+		printf("■ Threes       ■    %2d    ■    %2d    ■\n", point[THREES]->pointP1, point[THREES]->pointP2);
+	else if (point[THREES]->isUsedP1)
+		printf("■ Threes       ■    %2d    ■          ■\n", point[THREES]->pointP1);
+	else if (point[THREES]->isUsedP2)
+		printf("■ Threes       ■          ■    %2d    ■\n", point[THREES]->pointP2);
 	else
 		printf("■ Threes       ■          ■          ■\n");
 
-	if (fours->isUsedP1 && fours->isUsedP2)
-		printf("■ Fours        ■    %2d    ■    %2d    ■\n", fours->scoreP1, fours->scoreP2);
-	else if (fours->isUsedP1)
-		printf("■ Fours        ■    %2d    ■          ■\n", fours->scoreP1);
-	else if (fours->isUsedP2)
-		printf("■ Fours        ■          ■    %2d    ■\n", fours->scoreP2);
+	if (point[FOURS]->isUsedP1 && point[FOURS]->isUsedP2)
+		printf("■ Fours        ■    %2d    ■    %2d    ■\n", point[FOURS]->pointP1, point[FOURS]->pointP2);
+	else if (point[FOURS]->isUsedP1)
+		printf("■ Fours        ■    %2d    ■          ■\n", point[FOURS]->pointP1);
+	else if (point[FOURS]->isUsedP2)
+		printf("■ Fours        ■          ■    %2d    ■\n", point[FOURS]->pointP2);
 	else
 		printf("■ Fours        ■          ■          ■\n");
 
-	if (fives->isUsedP1 && fives->isUsedP2)
-		printf("■ Fives        ■    %2d    ■    %2d    ■\n", fives->scoreP1, fives->scoreP2);
-	else if (fives->isUsedP1)
-		printf("■ Fives        ■    %2d    ■          ■\n", fives->scoreP1);
-	else if (fives->isUsedP2)
-		printf("■ Fives        ■          ■    %2d    ■\n", fives->scoreP2);
+	if (point[FIVES]->isUsedP1 && point[FIVES]->isUsedP2)
+		printf("■ Fives        ■    %2d    ■    %2d    ■\n", point[FIVES]->pointP1, point[FIVES]->pointP2);
+	else if (point[FIVES]->isUsedP1)
+		printf("■ Fives        ■    %2d    ■          ■\n", point[FIVES]->pointP1);
+	else if (point[FIVES]->isUsedP2)
+		printf("■ Fives        ■          ■    %2d    ■\n", point[FIVES]->pointP2);
 	else
 		printf("■ Fives        ■          ■          ■\n");
 
-	if (sixes->isUsedP1 && sixes->isUsedP2)
-		printf("■ Sixes        ■    %2d    ■    %2d    ■\n", sixes->scoreP1, sixes->scoreP2);
-	else if (sixes->isUsedP1)
-		printf("■ Sixes        ■    %2d    ■          ■\n", sixes->scoreP1);
-	else if (sixes->isUsedP2)
-		printf("■ Sixes        ■          ■    %2d    ■\n", sixes->scoreP2);
+	if (point[SIXES]->isUsedP1 && point[SIXES]->isUsedP2)
+		printf("■ Sixes        ■    %2d    ■    %2d    ■\n", point[SIXES]->pointP1, point[SIXES]->pointP2);
+	else if (point[SIXES]->isUsedP1)
+		printf("■ Sixes        ■    %2d    ■          ■\n", point[SIXES]->pointP1);
+	else if (point[SIXES]->isUsedP2)
+		printf("■ Sixes        ■          ■    %2d    ■\n", point[SIXES]->pointP2);
 	else
 		printf("■ Sixes        ■          ■          ■\n");
 
@@ -728,68 +752,68 @@ void PrintTable()
 
 	printf("■ Subtotal     ■  %3d/63  ■  %3d/63  ■\n", subTotalP1, subTotalP2);
 	
-	if (bonus->isUsedP1 && bonus->isUsedP2)
-		printf("■ +35 Bonus    ■   +%2d    ■   +%2d    ■\n", bonus->scoreP1, bonus->scoreP2);
-	else if (bonus->isUsedP1)
-		printf("■ +35 Bonus    ■   +%2d    ■          ■\n", bonus->scoreP1);
-	else if (bonus->isUsedP2)
-		printf("■ +35 Bonus    ■          ■   +%2d    ■\n", bonus->scoreP2);
+	if (point[BONUS]->isUsedP1 && point[BONUS]->isUsedP2)
+		printf("■ +35 Bonus    ■   +%2d    ■   +%2d    ■\n", point[BONUS]->pointP1, point[BONUS]->pointP2);
+	else if (point[BONUS]->isUsedP1)
+		printf("■ +35 Bonus    ■   +%2d    ■          ■\n", point[BONUS]->pointP1);
+	else if (point[BONUS]->isUsedP2)
+		printf("■ +35 Bonus    ■          ■   +%2d    ■\n", point[BONUS]->pointP2);
 	else
 		printf("■ +35 Bonus    ■          ■          ■\n");
 
 	puts("■■■■■■■■■■■■■■■■■■■■■");
 
-	if (choice->isUsedP1 && choice->isUsedP2)
-		printf("■ Choice       ■    %2d    ■    %2d    ■\n", choice->scoreP1, choice->scoreP2);
-	else if (choice->isUsedP1)
-		printf("■ Choice       ■    %2d    ■          ■\n", choice->scoreP1);
-	else if (choice->isUsedP2)
-		printf("■ Choice       ■          ■    %2d    ■\n", choice->scoreP2);
+	if (point[CHOICE]->isUsedP1 && point[CHOICE]->isUsedP2)
+		printf("■ Choice       ■    %2d    ■    %2d    ■\n", point[CHOICE]->pointP1, point[CHOICE]->pointP2);
+	else if (point[CHOICE]->isUsedP1)
+		printf("■ Choice       ■    %2d    ■          ■\n", point[CHOICE]->pointP1);
+	else if (point[CHOICE]->isUsedP2)
+		printf("■ Choice       ■          ■    %2d    ■\n", point[CHOICE]->pointP2);
 	else
 		printf("■ Choice       ■          ■          ■\n");
 
-	if (fourOfAKind->isUsedP1 && fourOfAKind->isUsedP2)
-		printf("■ 4 of a Kind  ■    %2d    ■    %2d    ■\n", fourOfAKind->scoreP1, fourOfAKind->scoreP2);
-	else if (fourOfAKind->isUsedP1)
-		printf("■ 4 of a Kind  ■    %2d    ■          ■\n", fourOfAKind->scoreP1);
-	else if (fourOfAKind->isUsedP2)
-		printf("■ 4 of a Kind  ■          ■    %2d    ■\n", fourOfAKind->scoreP2);
+	if (point[FOUR_OF_A_KIND]->isUsedP1 && point[FOUR_OF_A_KIND]->isUsedP2)
+		printf("■ 4 of a Kind  ■    %2d    ■    %2d    ■\n", point[FOUR_OF_A_KIND]->pointP1, point[FOUR_OF_A_KIND]->pointP2);
+	else if (point[FOUR_OF_A_KIND]->isUsedP1)
+		printf("■ 4 of a Kind  ■    %2d    ■          ■\n", point[FOUR_OF_A_KIND]->pointP1);
+	else if (point[FOUR_OF_A_KIND]->isUsedP2)
+		printf("■ 4 of a Kind  ■          ■    %2d    ■\n", point[FOUR_OF_A_KIND]->pointP2);
 	else
 		printf("■ 4 of a Kind  ■          ■          ■\n");
 
-	if (fullHouse->isUsedP1 && fullHouse->isUsedP2)
-		printf("■ Full House   ■    %2d    ■    %2d    ■\n", fullHouse->scoreP1, fullHouse->scoreP2);
-	else if (fullHouse->isUsedP1)
-		printf("■ Full House   ■    %2d    ■          ■\n", fullHouse->scoreP1);
-	else if (fullHouse->isUsedP2)
-		printf("■ Full House   ■          ■    %2d    ■\n", fullHouse->scoreP2);
+	if (point[FULL_HOUSE]->isUsedP1 && point[FULL_HOUSE]->isUsedP2)
+		printf("■ Full House   ■    %2d    ■    %2d    ■\n", point[FULL_HOUSE]->pointP1, point[FULL_HOUSE]->pointP2);
+	else if (point[FULL_HOUSE]->isUsedP1)
+		printf("■ Full House   ■    %2d    ■          ■\n", point[FULL_HOUSE]->pointP1);
+	else if (point[FULL_HOUSE]->isUsedP2)
+		printf("■ Full House   ■          ■    %2d    ■\n", point[FULL_HOUSE]->pointP2);
 	else
 		printf("■ Full House   ■          ■          ■\n");
 
-	if (smallStraight->isUsedP1 && smallStraight->isUsedP2)
-		printf("■ S. Straight  ■    %2d    ■    %2d    ■\n", smallStraight->scoreP1, smallStraight->scoreP2);
-	else if (smallStraight->isUsedP1)
-		printf("■ S. Straight  ■    %2d    ■          ■\n", smallStraight->scoreP1);
-	else if (smallStraight->isUsedP2)
-		printf("■ S. Straight  ■          ■    %2d    ■\n", smallStraight->scoreP2);
+	if (point[SMALL_STRAIGHT]->isUsedP1 && point[SMALL_STRAIGHT]->isUsedP2)
+		printf("■ S. Straight  ■    %2d    ■    %2d    ■\n", point[SMALL_STRAIGHT]->pointP1, point[SMALL_STRAIGHT]->pointP2);
+	else if (point[SMALL_STRAIGHT]->isUsedP1)
+		printf("■ S. Straight  ■    %2d    ■          ■\n", point[SMALL_STRAIGHT]->pointP1);
+	else if (point[SMALL_STRAIGHT]->isUsedP2)
+		printf("■ S. Straight  ■          ■    %2d    ■\n", point[SMALL_STRAIGHT]->pointP2);
 	else
 		printf("■ S. Straight  ■          ■          ■\n");
 
-	if (largeStraight->isUsedP1 && largeStraight->isUsedP2)
-		printf("■ L. Straight  ■    %2d    ■    %2d    ■\n", largeStraight->scoreP1, largeStraight->scoreP2);
-	else if (largeStraight->isUsedP1)
-		printf("■ L. Straight  ■    %2d    ■          ■\n", largeStraight->scoreP1);
-	else if (largeStraight->isUsedP2)
-		printf("■ L. Straight  ■          ■    %2d    ■\n", largeStraight->scoreP2);
+	if (point[LARGE_STRAIGHT]->isUsedP1 && point[LARGE_STRAIGHT]->isUsedP2)
+		printf("■ L. Straight  ■    %2d    ■    %2d    ■\n", point[LARGE_STRAIGHT]->pointP1, point[LARGE_STRAIGHT]->pointP2);
+	else if (point[LARGE_STRAIGHT]->isUsedP1)
+		printf("■ L. Straight  ■    %2d    ■          ■\n", point[LARGE_STRAIGHT]->pointP1);
+	else if (point[LARGE_STRAIGHT]->isUsedP2)
+		printf("■ L. Straight  ■          ■    %2d    ■\n", point[LARGE_STRAIGHT]->pointP2);
 	else
 		printf("■ L. Straight  ■          ■          ■\n");
 
-	if (yacht->isUsedP1 && yacht->isUsedP2)
-		printf("■ Yacht        ■    %2d    ■    %2d    ■\n", yacht->scoreP1, yacht->scoreP2);
-	else if (yacht->isUsedP1)
-		printf("■ Yacht        ■    %2d    ■          ■\n", yacht->scoreP1);
-	else if (yacht->isUsedP2)
-		printf("■ Yacht        ■          ■    %2d    ■\n", yacht->scoreP2);
+	if (point[YACHT]->isUsedP1 && point[YACHT]->isUsedP2)
+		printf("■ Yacht        ■    %2d    ■    %2d    ■\n", point[YACHT]->pointP1, point[YACHT]->pointP2);
+	else if (point[YACHT]->isUsedP1)
+		printf("■ Yacht        ■    %2d    ■          ■\n", point[YACHT]->pointP1);
+	else if (point[YACHT]->isUsedP2)
+		printf("■ Yacht        ■          ■    %2d    ■\n", point[YACHT]->pointP2);
 	else
 		printf("■ Yacht        ■          ■          ■\n");
 
@@ -820,7 +844,7 @@ void SetAces()
 {
 	int sum = 0;
 
-	for (int i = 0; i < 5; i++)
+	for (int i = 0; i < NUMBER_OF_DICE; i++)
 	{
 		if (finalDice[i] == 1)
 		{
@@ -830,11 +854,11 @@ void SetAces()
 
 	if (player == 1)
 	{
-		aces->scoreP1 = sum;
+		point[ACES]->pointP1 = sum;
 	}
 	else
 	{
-		aces->scoreP2 = sum;
+		point[ACES]->pointP2 = sum;
 	}
 }
 
@@ -842,7 +866,7 @@ void SetDeuces()
 {
 	int sum = 0;
 
-	for (int i = 0; i < 5; i++)
+	for (int i = 0; i < NUMBER_OF_DICE; i++)
 	{
 		if (finalDice[i] == 2)
 		{
@@ -852,11 +876,11 @@ void SetDeuces()
 
 	if (player == 1)
 	{
-		deuces->scoreP1 = sum;
+		point[DEUCES]->pointP1 = sum;
 	}
 	else
 	{
-		deuces->scoreP2 = sum;
+		point[DEUCES]->pointP2 = sum;
 	}
 }
 
@@ -864,7 +888,7 @@ void SetThrees()
 {
 	int sum = 0;
 
-	for (int i = 0; i < 5; i++)
+	for (int i = 0; i < NUMBER_OF_DICE; i++)
 	{
 		if (finalDice[i] == 3)
 		{
@@ -874,11 +898,11 @@ void SetThrees()
 
 	if (player == 1)
 	{
-		threes->scoreP1 = sum;
+		point[THREES]->pointP1 = sum;
 	}
 	else
 	{
-		threes->scoreP2 = sum;
+		point[THREES]->pointP2 = sum;
 	}
 }
 
@@ -886,7 +910,7 @@ void SetFours()
 {
 	int sum = 0;
 
-	for (int i = 0; i < 5; i++)
+	for (int i = 0; i < NUMBER_OF_DICE; i++)
 	{
 		if (finalDice[i] == 4)
 		{
@@ -896,11 +920,11 @@ void SetFours()
 
 	if (player == 1)
 	{
-		fours->scoreP1 = sum;
+		point[FOURS]->pointP1 = sum;
 	}
 	else
 	{
-		fours->scoreP2 = sum;
+		point[FOURS]->pointP2 = sum;
 	}
 }
 
@@ -908,7 +932,7 @@ void SetFives()
 {
 	int sum = 0;
 
-	for (int i = 0; i < 5; i++)
+	for (int i = 0; i < NUMBER_OF_DICE; i++)
 	{
 		if (finalDice[i] == 5)
 		{
@@ -918,11 +942,11 @@ void SetFives()
 
 	if (player == 1)
 	{
-		fives->scoreP1 = sum;
+		point[FIVES]->pointP1 = sum;
 	}
 	else
 	{
-		fives->scoreP2 = sum;
+		point[FIVES]->pointP2 = sum;
 	}
 }
 
@@ -930,7 +954,7 @@ void SetSixes()
 {
 	int sum = 0;
 
-	for (int i = 0; i < 5; i++)
+	for (int i = 0; i < NUMBER_OF_DICE; i++)
 	{
 		if (finalDice[i] == 6)
 		{
@@ -940,11 +964,11 @@ void SetSixes()
 
 	if (player == 1)
 	{
-		sixes->scoreP1 = sum;
+		point[SIXES]->pointP1 = sum;
 	}
 	else
 	{
-		sixes->scoreP2 = sum;
+		point[SIXES]->pointP2 = sum;
 	}
 }
 
@@ -952,33 +976,33 @@ void SetChoice()
 {
 	int sum = 0;
 
-	for (int i = 0; i < 5; i++)
+	for (int i = 0; i < NUMBER_OF_DICE; i++)
 	{
 		sum += finalDice[i];
 	}
 
 	if (player == 1)
 	{
-		choice->scoreP1 = sum;
+		point[CHOICE]->pointP1 = sum;
 	}
 	else
 	{
-		choice->scoreP2 = sum;
+		point[CHOICE]->pointP2 = sum;
 	}
 }
 
-void SetFourOfAKind()
+void Sort()
 {
 	// 오름차순 정렬
 	int min;
 	int temp;
 	int idx;
 
-	for (int i = 0; i < 5; i++)
+	for (int i = 0; i < NUMBER_OF_DICE; i++)
 	{
 		min = INT_MAX;
 
-		for (int j = i; j < 5; j++)
+		for (int j = i; j < NUMBER_OF_DICE; j++)
 		{
 			if (finalDice[j] < min)
 			{
@@ -990,7 +1014,10 @@ void SetFourOfAKind()
 		finalDice[i] = min;
 		finalDice[idx] = temp;
 	}
+}
 
+void SetFourOfAKind()
+{
 	int isFourOfAKind = 1;
 
 	if (finalDice[0] == finalDice[1])
@@ -1024,57 +1051,35 @@ void SetFourOfAKind()
 	{
 		int sum = 0;
 
-		for (int i = 0; i < 5; i++)
+		for (int i = 0; i < NUMBER_OF_DICE; i++)
 		{
 			sum += finalDice[i];
 		}
 
 		if (player == 1)
 		{
-			fourOfAKind->scoreP1 = sum;
+			point[FOUR_OF_A_KIND]->pointP1 = sum;
 		}
 		else
 		{
-			fourOfAKind->scoreP2 = sum;
+			point[FOUR_OF_A_KIND]->pointP2 = sum;
 		}
 	}
 	else
 	{
 		if (player == 1)
 		{
-			fourOfAKind->scoreP1 = 0;
+			point[FOUR_OF_A_KIND]->pointP1 = 0;
 		}
 		else
 		{
-			fourOfAKind->scoreP2 = 0;
+			point[FOUR_OF_A_KIND]->pointP2 = 0;
 		}
 	}
 }
 
 void SetFullHouse()
 {
-	// 오름차순 정렬
-	int min;
-	int temp;
-	int idx;
-
-	for (int i = 0; i < 5; i++)
-	{
-		min = INT_MAX;
-
-		for (int j = i; j < 5; j++)
-		{
-			if (finalDice[j] < min)
-			{
-				min = finalDice[j];
-				idx = j;
-			}
-		}
-		temp = finalDice[i];
-		finalDice[i] = min;
-		finalDice[idx] = temp;
-	}
-
 	int isFullHouse = 0;
 
 	if (finalDice[0] == finalDice[1])
@@ -1102,57 +1107,35 @@ void SetFullHouse()
 	{
 		int sum = 0;
 
-		for (int i = 0; i < 5; i++)
+		for (int i = 0; i < NUMBER_OF_DICE; i++)
 		{
 			sum += finalDice[i];
 		}
 
 		if (player == 1)
 		{
-			fullHouse->scoreP1 = sum;
+			point[FULL_HOUSE]->pointP1 = sum;
 		}
 		else
 		{
-			fullHouse->scoreP2 = sum;
+			point[FULL_HOUSE]->pointP2 = sum;
 		}
 	}
 	else
 	{
 		if (player == 1)
 		{
-			fullHouse->scoreP1 = 0;
+			point[FULL_HOUSE]->pointP1 = 0;
 		}
 		else
 		{
-			fullHouse->scoreP2 = 0;
+			point[FULL_HOUSE]->pointP2 = 0;
 		}
 	}
 }
 
 void SetSmallStraight()
 {
-	// 오름차순 정렬
-	int min;
-	int temp;
-	int idx;
-
-	for (int i = 0; i < 5; i++)
-	{
-		min = INT_MAX;
-
-		for (int j = i; j < 5; j++)
-		{
-			if (finalDice[j] < min)
-			{
-				min = finalDice[j];
-				idx = j;
-			}
-		}
-		temp = finalDice[i];
-		finalDice[i] = min;
-		finalDice[idx] = temp;
-	}
-
 	int isSmallStraight = 0;
 	int countNum1 = 0;
 	int countNum2 = 0;
@@ -1161,7 +1144,7 @@ void SetSmallStraight()
 	int countNum5 = 0;
 	int countNum6 = 0;
 	 
-	for (int i = 0; i < 5; i++)
+	for (int i = 0; i < NUMBER_OF_DICE; i++)
 	{
 		switch (finalDice[i])
 		{
@@ -1205,50 +1188,28 @@ void SetSmallStraight()
 	{
 		if (player == 1)
 		{
-			smallStraight->scoreP1 = 15;
+			point[SMALL_STRAIGHT]->pointP1 = 15;
 		}
 		else
 		{
-			smallStraight->scoreP2 = 15;
+			point[SMALL_STRAIGHT]->pointP2 = 15;
 		}
 	}
 	else
 	{
 		if (player == 1)
 		{
-			smallStraight->scoreP1 = 0;
+			point[SMALL_STRAIGHT]->pointP1 = 0;
 		}
 		else
 		{
-			smallStraight->scoreP2 = 0;
+			point[SMALL_STRAIGHT]->pointP2 = 0;
 		}
 	}
 }
 
 void SetLargeStraight()
 {
-	// 오름차순 정렬
-	int min;
-	int temp;
-	int idx;
-
-	for (int i = 0; i < 5; i++)
-	{
-		min = INT_MAX;
-
-		for (int j = i; j < 5; j++)
-		{
-			if (finalDice[j] < min)
-			{
-				min = finalDice[j];
-				idx = j;
-			}
-		}
-		temp = finalDice[i];
-		finalDice[i] = min;
-		finalDice[idx] = temp;
-	}
-
 	int isLargeStraight = 1;
 
 	for (int i = 0; i < 4; i++)
@@ -1264,22 +1225,22 @@ void SetLargeStraight()
 	{
 		if (player == 1)
 		{
-			largeStraight->scoreP1 = 30;
+			point[LARGE_STRAIGHT]->pointP1 = 30;
 		}
 		else
 		{
-			largeStraight->scoreP2 = 30;
+			point[LARGE_STRAIGHT]->pointP2 = 30;
 		}
 	}
 	else
 	{
 		if (player == 1)
 		{
-			largeStraight->scoreP1 = 0;
+			point[LARGE_STRAIGHT]->pointP1 = 0;
 		}
 		else
 		{
-			largeStraight->scoreP2 = 0;
+			point[LARGE_STRAIGHT]->pointP2 = 0;
 		}
 	}
 }
@@ -1301,22 +1262,22 @@ void SetYacht()
 	{
 		if (player == 1)
 		{
-			yacht->scoreP1 = 50;
+			point[YACHT]->pointP1 = 50;
 		}
 		else
 		{
-			yacht->scoreP2 = 50;
+			point[YACHT]->pointP2 = 50;
 		}
 	}
 	else
 	{
 		if (player == 1)
 		{
-			yacht->scoreP1 = 0;
+			point[YACHT]->pointP1 = 0;
 		}
 		else
 		{
-			yacht->scoreP2 = 0;
+			point[YACHT]->pointP2 = 0;
 		}
 	}
 }
@@ -1324,63 +1285,63 @@ void SetYacht()
 // 보너스 여부 계산
 void SetBonus()
 {
-	if (aces->isUsedP1 && aces->isUsedP2 && deuces->isUsedP1 && deuces->isUsedP2
-		&& threes->isUsedP1 && threes->isUsedP2 && fours->isUsedP1 && fours->isUsedP2
-		&& fives->isUsedP1 && fives->isUsedP2 && sixes->isUsedP1 && sixes->isUsedP2)
+	if (point[ACES]->isUsedP1 && point[ACES]->isUsedP2 && point[DEUCES]->isUsedP1 && point[DEUCES]->isUsedP2
+		&& point[THREES]->isUsedP1 && point[THREES]->isUsedP2 && point[FOURS]->isUsedP1 && point[FOURS]->isUsedP2
+		&& point[FIVES]->isUsedP1 && point[FIVES]->isUsedP2 && point[SIXES]->isUsedP1 && point[SIXES]->isUsedP2)
 	{
 		if (subTotalP1 >= 63 && subTotalP2 >= 63)
 		{
-			bonus->scoreP1 = 35;
-			bonus->scoreP2 = 35;
-			bonus->isUsedP1 = 1;
-			bonus->isUsedP2 = 1;
+			point[BONUS]->pointP1 = 35;
+			point[BONUS]->pointP2 = 35;
+			point[BONUS]->isUsedP1 = 1;
+			point[BONUS]->isUsedP2 = 1;
 		}
 		else if (subTotalP1 >= 63)
 		{
-			bonus->scoreP1 = 35;
-			bonus->scoreP2 = 0;
-			bonus->isUsedP1 = 1;
-			bonus->isUsedP2 = 1;
+			point[BONUS]->pointP1 = 35;
+			point[BONUS]->pointP2 = 0;
+			point[BONUS]->isUsedP1 = 1;
+			point[BONUS]->isUsedP2 = 1;
 		}
 		else if (subTotalP2 >= 63)
 		{
-			bonus->scoreP1 = 0;
-			bonus->scoreP2 = 35;
-			bonus->isUsedP1 = 1;
-			bonus->isUsedP2 = 1;
+			point[BONUS]->pointP1 = 0;
+			point[BONUS]->pointP2 = 35;
+			point[BONUS]->isUsedP1 = 1;
+			point[BONUS]->isUsedP2 = 1;
 		}
 		else
 		{
-			bonus->scoreP1 = 0;
-			bonus->scoreP2 = 0;
-			bonus->isUsedP1 = 1;
-			bonus->isUsedP2 = 1;
+			point[BONUS]->pointP1 = 0;
+			point[BONUS]->pointP2 = 0;
+			point[BONUS]->isUsedP1 = 1;
+			point[BONUS]->isUsedP2 = 1;
 		}
 	}
-	else if (aces->isUsedP1 && deuces->isUsedP1 && threes->isUsedP1 && fours->isUsedP1 && fives->isUsedP1 && sixes->isUsedP1)
+	else if (point[ACES]->isUsedP1 && point[DEUCES]->isUsedP1 && point[THREES]->isUsedP1 && point[FOURS]->isUsedP1 && point[FIVES]->isUsedP1 && point[SIXES]->isUsedP1)
 	{
 		if (subTotalP1 >= 63)
 		{
-			bonus->scoreP1 = 35;
-			bonus->isUsedP1 = 1;
+			point[BONUS]->pointP1 = 35;
+			point[BONUS]->isUsedP1 = 1;
 		}
 		else
 		{
-			bonus->scoreP1 = 0;
-			bonus->isUsedP1 = 1;
+			point[BONUS]->pointP1 = 0;
+			point[BONUS]->isUsedP1 = 1;
 		}
 	}
-	else if (aces->isUsedP2 && deuces->isUsedP2 && threes->isUsedP2 && fours->isUsedP2 && fives->isUsedP2 && sixes->isUsedP2)
+	else if (point[ACES]->isUsedP2 && point[DEUCES]->isUsedP2 && point[THREES]->isUsedP2 && point[FOURS]->isUsedP2 && point[FIVES]->isUsedP2 && point[SIXES]->isUsedP2)
 	{
 		if (subTotalP2 >= 63)
 		{
-			bonus->scoreP2 = 35;
-			bonus->isUsedP2 = 1;
+			point[BONUS]->pointP2 = 35;
+			point[BONUS]->isUsedP2 = 1;
 		}
 		else
 		{
-			bonus->scoreP2 = 0;
-			bonus->isUsedP2 = 1;
+			point[BONUS]->pointP2 = 0;
+			point[BONUS]->isUsedP2 = 1;
 		}
 	}
 	else

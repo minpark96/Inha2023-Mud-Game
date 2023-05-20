@@ -15,22 +15,44 @@
 	int isKeeped;
 }Dice;*/
 
+#define MAX_TURN_COUNT 12
+#define MAX_ROLL_COUNT 3
+#define NUMBER_OF_POINTS 13
+#define NUMBER_OF_DICE 5
+
+#define BONUS 0
+#define ACES 1
+#define DEUCES 2
+#define THREES 3
+#define FOURS 4
+#define FIVES 5
+#define SIXES 6
+#define CHOICE 7
+#define FOUR_OF_A_KIND 8
+#define FULL_HOUSE 9
+#define SMALL_STRAIGHT 10
+#define LARGE_STRAIGHT 11
+#define YACHT 12
+
 typedef struct
 {
-	int scoreP1;
-	int scoreP2;
+	int pointP1;
+	int pointP2;
 	int isUsedP1;
 	int isUsedP2;
-} Score;
+} Point;
 
 void SetColor(int color);
 void CursorView(char show);
 void gotoxy(int x, int y);
 void RollTheDice(int* rollCount);
 void PrintMenu(void);
-void InitScore();
-//void InitDice();
-void ShowTurnAndPlayer(int turn, int player);
+void InitPoint();
+void ChooseCategory();
+void Sort();
+void KeepAndRollToFinal();
+void ShowTurnAndPlayer();
+void ShowTempPoints();
 void PrintKeepedDice(void);
 void PrintRolledDice(void);
 int GetX(int i);
