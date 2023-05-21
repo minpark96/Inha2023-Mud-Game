@@ -50,7 +50,7 @@ int main(void)
 	if (POS == 0)
 	{
 		// 구조체 변수 초기화
-		InitPoint();
+		InitPoints();
 		//InitDice();
 		cls;
 		ShowTurnAndPlayer();
@@ -204,7 +204,7 @@ void ShowTempPoints()
 {
 	if (player == 1)
 	{
-		for (int i = 0; i < NUMBER_OF_POINTS; i++)
+		for (int i = 1; i < NUMBER_OF_POINTS; i++)
 		{
 			if (point[i]->isUsedP1 == 0)
 			{
@@ -214,7 +214,7 @@ void ShowTempPoints()
 	}
 	else
 	{
-		for (int i = 0; i < NUMBER_OF_POINTS; i++)
+		for (int i = 1; i < NUMBER_OF_POINTS; i++)
 		{
 			if (point[i]->isUsedP2 == 0)
 			{
@@ -226,7 +226,6 @@ void ShowTempPoints()
 
 void Keep()
 {
-	
 	int POS = 0;
 	int cntKeepedDice = 0;
 	int cntRolledDice = 0;
@@ -283,43 +282,8 @@ void Keep()
 			}
 		}
 		else;
-
-		switch (POS)
-		{
-		case 0:
-			PrintChooseButton(POS);
-			break;
-		case 1:
-			PrintChooseButton(POS);
-			break;
-		case 2:
-			PrintChooseButton(POS);
-			break;
-		case 3:
-			PrintChooseButton(POS);
-			break;
-		case 4:
-			PrintChooseButton(POS);
-			break;
-		case 5:
-			PrintChooseButton(POS);
-			break;
-		case 6:
-			PrintChooseButton(POS);
-			break;
-		case 7:
-			PrintChooseButton(POS);
-			break;
-		case 8:
-			PrintChooseButton(POS);
-			break;
-		case 9:
-			PrintChooseButton(POS);
-			break;
-		case 10:
-			PrintChooseButton(POS);
-			break;
-		}
+		
+		PrintChooseButton(POS);
 		Sleep(100);
 	}
 }
@@ -647,7 +611,7 @@ void ShowTurnAndPlayer()
 }
 
 // 점수 초기화
-void InitPoint()
+void InitPoints()
 {
 	for (int i = 0; i < NUMBER_OF_POINTS; i++)
 	{
@@ -684,18 +648,20 @@ void RollTheDice(int* rollCount)
 		}
 		(*rollCount)++;
 	}
+
+
 }
 
 void PrintTable()
 {
 	gotoxy(0, 24); puts("■■■■■■■■■■■■■■■■■■■■■");
-	puts("■     Turn     ■          ■          ■");
-	printf("■    %2d/12     ■ Player 1 ■ Player 2 ■\n", turn);
-	printf("■ Categories   ■          ■          ■\n");
+	puts("■     Turn\t■          ■          ■");
+	printf("■    %2d/12\t■ Player 1 ■ Player 2 ■\n", 1);
+	printf("■ Categories\t■          ■          ■\n");
 	puts("■■■■■■■■■■■■■■■■■■■■■");
 
 	if (point[ACES]->isUsedP1 && point[ACES]->isUsedP2)
-		printf("■ Aces         ■     %d    ■     %d    ■\n", point[ACES]->pointP1, point[ACES]->pointP2);
+		printf("■ %s\t■     %d    ■     %d    ■\n", "Aces", point[ACES]->pointP1, point[ACES]->pointP2);
 	else if(point[ACES]->isUsedP1)
 		printf("■ Aces         ■     %d    ■          ■\n", point[ACES]->pointP1);
 	else if(point[ACES]->isUsedP2)
@@ -1347,5 +1313,3 @@ void SetBonus()
 	else
 		return;
 }
-
-// 주사위 고정하기

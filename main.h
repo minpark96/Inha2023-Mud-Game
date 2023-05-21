@@ -47,7 +47,7 @@ void CursorView(char show);
 void gotoxy(int x, int y);
 void RollTheDice(int* rollCount);
 void PrintMenu(void);
-void InitPoint();
+void InitPoints();
 void ChooseCategory();
 void Sort();
 void KeepAndRollToFinal();

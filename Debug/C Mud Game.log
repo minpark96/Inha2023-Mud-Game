@@ -1,12 +1,12 @@
 ﻿  main.c
-D:\Work\C\C Mud Game\main.c(15,8): warning C4244: '함수': 'time_t'에서 'unsigned int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-D:\Work\C\C Mud Game\main.c(238,66): warning C4047: '함수': 'int **'의 간접 참조 수준이 'int (*)[5]'과(와) 다릅니다.
-D:\Work\C\C Mud Game\main.c(238,52): warning C4024: 'CountKeepAndRoll': 형식 및 실제 매개 변수 3의 형식이 서로 다릅니다.
-D:\Work\C\C Mud Game\main.c(238,82): warning C4047: '함수': 'int **'의 간접 참조 수준이 'int (*)[5]'과(와) 다릅니다.
-D:\Work\C\C Mud Game\main.c(238,68): warning C4024: 'CountKeepAndRoll': 형식 및 실제 매개 변수 4의 형식이 서로 다릅니다.
-D:\Work\C\C Mud Game\main.c(336,25): warning C4047: '=': 'int *'의 간접 참조 수준이 'int'과(와) 다릅니다.
-D:\Work\C\C Mud Game\main.c(346,25): warning C4047: '=': 'int *'의 간접 참조 수준이 'int'과(와) 다릅니다.
-D:\Work\C\C Mud Game\main.c(475,3): warning C4102: 'Default': 참조되지 않은 레이블입니다.
-D:\Work\C\C Mud Game\main.c(513,3): warning C4102: 'Default': 참조되지 않은 레이블입니다.
-D:\Work\C\C Mud Game\main.c(535): warning C4715: 'GetX': 모든 제어 경로에서 값을 반환하지는 않습니다.
-  C Mud Game.vcxproj -> D:\Work\C\C Mud Game\Debug\C Mud Game.exe
+C:\Users\phm33\source\repos\Mud-Game\main.c(15,8): warning C4244: '함수': 'time_t'에서 'unsigned int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\phm33\source\repos\Mud-Game\main.c(237,66): warning C4047: '함수': 'int **'의 간접 참조 수준이 'int (*)[5]'과(와) 다릅니다.
+C:\Users\phm33\source\repos\Mud-Game\main.c(237,52): warning C4024: 'CountKeepAndRoll': 형식 및 실제 매개 변수 3의 형식이 서로 다릅니다.
+C:\Users\phm33\source\repos\Mud-Game\main.c(237,82): warning C4047: '함수': 'int **'의 간접 참조 수준이 'int (*)[5]'과(와) 다릅니다.
+C:\Users\phm33\source\repos\Mud-Game\main.c(237,68): warning C4024: 'CountKeepAndRoll': 형식 및 실제 매개 변수 4의 형식이 서로 다릅니다.
+C:\Users\phm33\source\repos\Mud-Game\main.c(300,25): warning C4047: '=': 'int *'의 간접 참조 수준이 'int'과(와) 다릅니다.
+C:\Users\phm33\source\repos\Mud-Game\main.c(310,25): warning C4047: '=': 'int *'의 간접 참조 수준이 'int'과(와) 다릅니다.
+C:\Users\phm33\source\repos\Mud-Game\main.c(439,10): warning C4102: 'Default': 참조되지 않은 레이블입니다.
+C:\Users\phm33\source\repos\Mud-Game\main.c(477,10): warning C4102: 'Default': 참조되지 않은 레이블입니다.
+C:\Users\phm33\source\repos\Mud-Game\main.c(499): warning C4715: 'GetX': 모든 제어 경로에서 값을 반환하지는 않습니다.
+  C Mud Game.vcxproj -> C:\Users\phm33\source\repos\Mud-Game\Debug\C Mud Game.exe
