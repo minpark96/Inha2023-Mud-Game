@@ -21,6 +21,27 @@
     <ClCompile Include="API.c">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="keep_and_discard.c">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="choose_category.c">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="roll.c">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="print.c">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="calculate.c">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="init.c">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="yacht.c">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
