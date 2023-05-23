@@ -128,14 +128,13 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="API.c" />
-    <ClCompile Include="calculate.c" />
-    <ClCompile Include="choose_category.c" />
-    <ClCompile Include="init.c" />
-    <ClCompile Include="keep_and_discard.c" />
+    <ClCompile Include="button.c" />
+    <ClCompile Include="point.c" />
     <ClCompile Include="main.c" />
     <ClCompile Include="print.c" />
-    <ClCompile Include="roll.c" />
-    <ClCompile Include="yacht.c" />
+    <ClCompile Include="dice.c" />
+    <ClCompile Include="core.c" />
+    <ClCompile Include="util.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h" />

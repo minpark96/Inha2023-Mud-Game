@@ -1,43 +1,9 @@
-﻿  API.c
-  calculate.c
-  choose_category.c
-D:\Work\C\C Mud Game\choose_category.c(12,19): warning C4047: '함수': 'int **'의 간접 참조 수준이 'int (*)[12]'과(와) 다릅니다.
-D:\Work\C\C Mud Game\choose_category.c(12,12): warning C4024: 'SetPOSset': 형식 및 실제 매개 변수 1의 형식이 서로 다릅니다.
-D:\Work\C\C Mud Game\choose_category.c(71,24): warning C4047: '=': 'int *'의 간접 참조 수준이 'int'과(와) 다릅니다.
-D:\Work\C\C Mud Game\choose_category.c(82,24): warning C4047: '=': 'int *'의 간접 참조 수준이 'int'과(와) 다릅니다.
-  init.c
-  keep_and_discard.c
-D:\Work\C\C Mud Game\keep_and_discard.c(17,66): warning C4047: '함수': 'int **'의 간접 참조 수준이 'int (*)[5]'과(와) 다릅니다.
-D:\Work\C\C Mud Game\keep_and_discard.c(17,52): warning C4024: 'CountKeepAndRoll': 형식 및 실제 매개 변수 3의 형식이 서로 다릅니다.
-D:\Work\C\C Mud Game\keep_and_discard.c(17,82): warning C4047: '함수': 'int **'의 간접 참조 수준이 'int (*)[5]'과(와) 다릅니다.
-D:\Work\C\C Mud Game\keep_and_discard.c(17,68): warning C4024: 'CountKeepAndRoll': 형식 및 실제 매개 변수 4의 형식이 서로 다릅니다.
-D:\Work\C\C Mud Game\keep_and_discard.c(22,19): warning C4087: 'PrintRolledDice': 'void' 매개 변수 목록을 사용하여 선언되었습니다.
-D:\Work\C\C Mud Game\keep_and_discard.c(80,25): warning C4047: '=': 'int *'의 간접 참조 수준이 'int'과(와) 다릅니다.
-D:\Work\C\C Mud Game\keep_and_discard.c(90,25): warning C4047: '=': 'int *'의 간접 참조 수준이 'int'과(와) 다릅니다.
-D:\Work\C\C Mud Game\keep_and_discard.c(112,18): warning C4047: '함수': 'int **'의 간접 참조 수준이 'int (*)[5]'과(와) 다릅니다.
-D:\Work\C\C Mud Game\keep_and_discard.c(112,7): warning C4024: 'Sort': 형식 및 실제 매개 변수 1의 형식이 서로 다릅니다.
-D:\Work\C\C Mud Game\keep_and_discard.c(127,18): warning C4047: '함수': 'int **'의 간접 참조 수준이 'int (*)[5]'과(와) 다릅니다.
-D:\Work\C\C Mud Game\keep_and_discard.c(127,7): warning C4024: 'Sort': 형식 및 실제 매개 변수 1의 형식이 서로 다릅니다.
-  main.c
-  print.c
-D:\Work\C\C Mud Game\print.c(9,8): warning C4244: '함수': 'time_t'에서 'unsigned int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-D:\Work\C\C Mud Game\print.c(92,1): warning C4027: 정식 매개 변수 목록을 사용하지 않고 함수를 선언했습니다.
-  roll.c
-D:\Work\C\C Mud Game\roll.c(27,18): warning C4047: '함수': 'int **'의 간접 참조 수준이 'int (*)[5]'과(와) 다릅니다.
-D:\Work\C\C Mud Game\roll.c(27,7): warning C4024: 'Sort': 형식 및 실제 매개 변수 1의 형식이 서로 다릅니다.
-D:\Work\C\C Mud Game\roll.c(50,18): warning C4047: '함수': 'int **'의 간접 참조 수준이 'int (*)[5]'과(와) 다릅니다.
-D:\Work\C\C Mud Game\roll.c(50,7): warning C4024: 'Sort': 형식 및 실제 매개 변수 1의 형식이 서로 다릅니다.
-D:\Work\C\C Mud Game\roll.c(68,25): warning C4047: '<': 'int *'의 간접 참조 수준이 'int'과(와) 다릅니다.
-D:\Work\C\C Mud Game\roll.c(70,22): warning C4047: '=': 'int'의 간접 참조 수준이 'int *'과(와) 다릅니다.
-D:\Work\C\C Mud Game\roll.c(74,21): warning C4047: '=': 'int'의 간접 참조 수준이 'int *'과(와) 다릅니다.
-D:\Work\C\C Mud Game\roll.c(75,20): warning C4047: '=': 'int *'의 간접 참조 수준이 'int'과(와) 다릅니다.
-D:\Work\C\C Mud Game\roll.c(76,23): warning C4047: '=': 'int *'의 간접 참조 수준이 'int'과(와) 다릅니다.
-D:\Work\C\C Mud Game\roll.c(102,17): warning C4047: '함수': 'int **'의 간접 참조 수준이 'int (*)[5]'과(와) 다릅니다.
-D:\Work\C\C Mud Game\roll.c(102,7): warning C4024: 'Sort': 형식 및 실제 매개 변수 1의 형식이 서로 다릅니다.
-  yacht.c
-D:\Work\C\C Mud Game\yacht.c(65,19): warning C4087: 'PrintRolledDice': 'void' 매개 변수 목록을 사용하여 선언되었습니다.
+﻿  button.c
+  core.c
+C:\Users\phm33\source\repos\Mud-Game\core.c(6,8): warning C4244: '함수': 'time_t'에서 'unsigned int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\phm33\source\repos\Mud-Game\core.c(203,49): warning C4047: '함수': 'int **'의 간접 참조 수준이 'int (*)[5]'과(와) 다릅니다.
+C:\Users\phm33\source\repos\Mud-Game\core.c(203,35): warning C4024: 'CountKeepedDice': 형식 및 실제 매개 변수 1의 형식이 서로 다릅니다.
+C:\Users\phm33\source\repos\Mud-Game\core.c(262,19): warning C4047: '함수': 'int **'의 간접 참조 수준이 'int (*)[12]'과(와) 다릅니다.
+C:\Users\phm33\source\repos\Mud-Game\core.c(262,12): warning C4024: 'SetPOSset': 형식 및 실제 매개 변수 1의 형식이 서로 다릅니다.
   코드를 생성하고 있습니다...
-D:\Work\C\C Mud Game\print.c(89): warning C4715: 'GetKeepedDiceX': 모든 제어 경로에서 값을 반환하지는 않습니다.
-D:\Work\C\C Mud Game\print.c(172): warning C4715: 'GetRolledDiceX': 모든 제어 경로에서 값을 반환하지는 않습니다.
-D:\Work\C\C Mud Game\choose_category.c(238): warning C4715: 'GetY': 모든 제어 경로에서 값을 반환하지는 않습니다.
-  C Mud Game.vcxproj -> D:\Work\C\C Mud Game\Debug\C Mud Game.exe
+  C Mud Game.vcxproj -> C:\Users\phm33\source\repos\Mud-Game\Debug\C Mud Game.exe

@@ -21,25 +21,22 @@
     <ClCompile Include="API.c">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="keep_and_discard.c">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="choose_category.c">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="roll.c">
+    <ClCompile Include="dice.c">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="print.c">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="calculate.c">
+    <ClCompile Include="point.c">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="init.c">
+    <ClCompile Include="core.c">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="yacht.c">
+    <ClCompile Include="button.c">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="util.c">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
